@@ -1,0 +1,102 @@
+.main-content {
+    min-height: 431px;
+    margin-top: 12px;
+    margin-bottom: 60px;
+}
+
+.main-footer {
+    height: 34px;
+    padding: 5px 16px;
+    font-size: 12px;
+    border-radius: 4px 4px 0 0;
+    border-color: #e7e7e7;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 1px 5px rgba(0, 0, 0, 0.075);
+    margin-top: 35px;
+    background-color: #bdbdbd;
+    background: -webkit-linear-gradient(top, #ffffff, #f8f8f8);
+    background: -moz-linear-gradient(top, #ffffff, #f8f8f8);
+    background: -ms-linear-gradient(top, #ffffff, #f8f8f8);
+    background: -o-linear-gradient(top, #ffffff, #f8f8f8);
+}
+
+.navbar-nav.navbar-right .btn {
+    position: relative;
+    z-index: 2;
+    padding: 4px 20px;
+    margin: 10px auto;
+    transition: transform 0.3s;
+}
+
+.login {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login form {
+    display: inline-block;
+    width: 330px;
+    height: 315px;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #F5F5F5;
+    text-align: left;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #C9C9C9;
+}
+
+.logout {
+    color: #0093c8 !important;
+    cursor: pointer;
+}
+
+#todo-form {
+    margin-bottom: 15px;
+}
+
+#new-todo{
+    width: 470px;
+}
+
+.todo-title {
+    display: inline-block;
+    margin: 7px 10px;
+}
+
+.toggle {
+    margin-right: 10px !important;
+}
+
+#todo-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#todo-list span.completed a {
+    color: #d9d9d9;
+    text-decoration: line-through;
+    border-bottom: none;
+}
+
+#todo-list li .destroy {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 15px;
+    margin: auto 0;
+    font-size: 20px;
+    color: #cc9a9a;
+    cursor: pointer;
+}
+
+#todo-list li:hover .destroy {
+    display: block;
+}
+
+.action-panel {
+    padding: 0 15px;
+}
+
+.remaining, .clear-completed {
+    padding-top: 10px;
+}

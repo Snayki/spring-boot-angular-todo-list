@@ -1,0 +1,7 @@
+# IDE files #
+.idea
+*.iml
+.mvn
+
+target
+bower_components

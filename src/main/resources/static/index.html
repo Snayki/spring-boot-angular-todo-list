@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title>Your's ToDo List</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="bower_components/bootstrap-additions/dist/bootstrap-additions.min.css">
+	<link rel="stylesheet" href="bower_components/angular-growl-3/build/angular-growl.min.css">
+	<link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css">
+	<link rel="stylesheet" href="app.css">
+
+	<script src="bower_components/lodash/dist/lodash.min.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+	<script src="bower_components/angular-resource/angular-resource.js"></script>
+	<script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
+	<script src="bower_components/angular-growl-3/build/angular-growl.js"></script>
+	<script src="bower_components/angular-xeditable/dist/js/xeditable.min.js"></script>
+
+	<script src="app.js"></script>
+
+	<script src="utils/utils.error.js"></script>
+
+	<!--Auth module-->
+	<script src="auth/auth.js"></script>
+	<script src="auth/login/login.js"></script>
+
+	<!--ToDo module-->
+	<script src="todo/todo.js"></script>
+	<script src="todo/todoResource.js"></script>
+	<script src="todo/todoController.js"></script>
+
+</head>
+<body>
+<div>
+	<div class="container" ng-controller="AppCtrl">
+		<header>
+			<div class="navbar navbar-default" role="navigation" bs-navbar ng-show="isAuthenticated()">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<a class="navbar-brand" ui-sref="todoList">ToDo List</a>
+					</div>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active">
+							<a ui-sref="todoList">Home</a>
+						</li>
+						<li>
+							<a ng-click="logout()" title="Log Out" class="logout">Log Out</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</header>
+
+		<div class="row">
+			<div class="growl-container">
+				<div growl></div>
+			</div>
+			<div class="main-content" ui-view></div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
