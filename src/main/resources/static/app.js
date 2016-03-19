@@ -4,7 +4,7 @@ angular.module('app', [
     'http-auth-interceptor',
     'angular-growl',
     'xeditable',
-    'utils.error',
+    'utils',
     'auth',
     'todo'
 ]);
@@ -18,7 +18,9 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, $http
         controller: 'LoginCtrl'
     });
 
+    $httpProvider.interceptors.push('sessionHandlerInterceptor');
     $httpProvider.interceptors.push('errorHandlerInterceptor');
+
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
 });

@@ -3,12 +3,14 @@ angular.module('auth', ['http-auth-interceptor']);
 angular.module('auth').factory('AuthService', function($http, $location, $state, authService, growl) {
     var auth = (function() {
         var _authenticated = false;
+        var _token = '';
 
         return {
             authenticate: function(credentials) {
                 postCredentials(credentials)
-                    .then(function() {
+                    .then(function(response) {
                         _authenticated = true;
+                        _token  = response.data.token;
                         authService.loginConfirmed();
                     }).catch(function(err) {
                         growl.error(err.data.message);
@@ -30,11 +32,20 @@ angular.module('auth').factory('AuthService', function($http, $location, $state,
                 return _authenticated;
             },
 
+            getToken: function() {
+                return _token;
+            },
+
+            setToken: function(token) {
+                _token = token
+            },
+
             clear: function() {
                 $http.post("api/auth/logout", {}, {
                     ignoreAuthModule: true
                 }).success(function() {
                     _authenticated = false;
+                    _token = undefined;
                     $state.go('login');
                 });
             }
@@ -42,12 +53,11 @@ angular.module('auth').factory('AuthService', function($http, $location, $state,
     })();
 
     function postCredentials(credentials) {
-        var data = 'j_username=' + encodeURIComponent(credentials.userName) +
-            '&j_password=' + encodeURIComponent(credentials.password) +
-            '&submit=Login';
-        return $http.post('api/authentication', data, {
+        return $http.post('api/auth/login', '', {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Login': encodeURIComponent(credentials.userName),
+                'X-Password': encodeURIComponent(credentials.password)
             },
             ignoreAuthModule: true
         });

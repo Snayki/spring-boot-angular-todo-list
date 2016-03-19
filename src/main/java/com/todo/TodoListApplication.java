@@ -1,7 +1,8 @@
 package com.todo;
 
-import com.todo.service.user.UserService;
-import com.todo.utils.security.*;
+import com.todo.utils.security.AuthenticationFilter;
+import com.todo.utils.security.CustomTokenAuthenticationProvider;
+import com.todo.utils.security.CustomUsernamePasswordAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,10 +12,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import javax.servlet.http.HttpServletResponse;
 
 @SpringBootApplication
 public class TodoListApplication {
@@ -29,50 +33,17 @@ public class TodoListApplication {
 	public static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		@Autowired
-		private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;
+		private CustomUsernamePasswordAuthenticationProvider customUsernamePasswordAuthenticationProvider;
 
 		@Autowired
-		private AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler;
-
-		@Autowired
-		private AjaxLogoutSuccessHandler ajaxLogoutSuccessHandler;
-
-		@Autowired
-		private Http401UnauthorizedEntryPoint authenticationEntryPoint;
-
-		@Autowired
-		private CustomAccessDeniedHandler customAccessDeniedHandler;
-
-		@Autowired
-		private CustomAuthenticationProvider customAuthenticationProvider;
-
-		@Autowired
-		private UserService userService;
+		private CustomTokenAuthenticationProvider customTokenAuthenticationProvider;
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http
-				.csrf().disable() //csrfTokenRepository(csrfTokenRepository())
-//			.and()
-				.formLogin()
-				.loginProcessingUrl("/api/authentication")
-				.successHandler(ajaxAuthenticationSuccessHandler)
-				.failureHandler(ajaxAuthenticationFailureHandler)
-				.usernameParameter("j_username")
-				.passwordParameter("j_password")
-				.permitAll()
-			.and()
-				.logout()
-				.logoutUrl("/api/auth/logout")
-				.logoutSuccessHandler(ajaxLogoutSuccessHandler)
-				.logoutSuccessUrl("/")
-				.invalidateHttpSession(Boolean.TRUE)
-				.deleteCookies("JSESSIONID")
-				.permitAll()
-			.and()
-				.headers()
-				.frameOptions()
-				.disable()
+				.csrf().disable()
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 				.authorizeRequests()
 				.antMatchers("/api/auth/logged").authenticated()
@@ -81,23 +52,22 @@ public class TodoListApplication {
 				.antMatchers("/**").permitAll()
 			.and()
 				.exceptionHandling()
-				.authenticationEntryPoint(authenticationEntryPoint)
-//				.accessDeniedHandler(customAccessDeniedHandler)
-			.and()
-//				.addFilterAfter(new CsrfCookieGeneratorFilter(), CsrfFilter.class)
-				.headers().cacheControl();
+				.authenticationEntryPoint(unauthorizedEntryPoint());
+
+			http.addFilterBefore(new AuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class);
 		}
 
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-			auth.userDetailsService(userService);
-			auth.authenticationProvider(customAuthenticationProvider);
+			auth
+				.authenticationProvider(customUsernamePasswordAuthenticationProvider)
+				.authenticationProvider(customTokenAuthenticationProvider);
 		}
 
-		private CsrfTokenRepository csrfTokenRepository() {
-			HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-			repository.setHeaderName("X-XSRF-TOKEN");
-			return repository;
+		@Bean
+		public AuthenticationEntryPoint unauthorizedEntryPoint() {
+			return (request, response, authException)
+					-> response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 		}
 	}
 

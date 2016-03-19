@@ -20,7 +20,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
     @JsonView(View.Public.class)
-    private int id;
+    private Integer id;
 
     @JsonView(View.Public.class)
     @Column(name="username", unique = true, nullable = false)
@@ -37,11 +37,11 @@ public class User implements UserDetails {
     @Column(name="last_name", nullable = false)
     private String lastName;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -106,4 +106,8 @@ public class User implements UserDetails {
         return authorityList;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %s", firstName, lastName);
+    }
 }

@@ -4,8 +4,6 @@ import com.todo.entity.Todo;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
-
 /**
  * Created by Snayki on 16.03.2016.
  */

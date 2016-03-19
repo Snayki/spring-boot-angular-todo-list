@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.todo.utils.jackson.View;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Created by Snayki on 16.03.2016.
