@@ -2,11 +2,13 @@ package com.todo.service.todo;
 
 import com.todo.dao.TodoDao;
 import com.todo.entity.Todo;
+import com.todo.entity.User;
 import com.todo.utils.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,13 +23,19 @@ public class TodoServiceImpl implements TodoService {
     @Transactional(readOnly = true)
     @Override
     public List<Todo> findAll() {
-        return (List<Todo>) todoDao.findAll();
+        User user = SecurityUtils.getAuthenticatedUser();
+
+        if(user == null) {
+            return Collections.emptyList();
+        }
+
+        return todoDao.findAllByUser(user);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Todo findById(Long id) {
-        return null;
+    public Todo findById(Integer id) {
+        return todoDao.findOne(id);
     }
 
     @Transactional

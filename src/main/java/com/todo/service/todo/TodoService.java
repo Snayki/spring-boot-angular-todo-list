@@ -10,7 +10,7 @@ import java.util.List;
 public interface TodoService {
     List<Todo> findAll();
 
-    Todo findById(Long id);
+    Todo findById(Integer id);
 
     Todo create(Todo todo);
 

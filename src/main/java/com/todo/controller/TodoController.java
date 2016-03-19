@@ -28,7 +28,7 @@ public class TodoController {
 
     @JsonView(View.Public.class)
     @RequestMapping(value = "/{"+ Constants.TODO_ID_PARAM +"}", method = RequestMethod.GET)
-    public Todo getById(@PathVariable(value = Constants.TODO_ID_PARAM) Long id) {
+    public Todo getById(@PathVariable(value = Constants.TODO_ID_PARAM) Integer id) {
         return todoService.findById(id);
     }
 

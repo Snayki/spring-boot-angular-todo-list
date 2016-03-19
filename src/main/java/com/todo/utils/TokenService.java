@@ -14,28 +14,28 @@ import java.util.UUID;
 public class TokenService {
 
     public TokenService() {
-        this.restApiAuthTokenCache = new ConcurrentMapCache("authTokenCache");
+        this.authTokenCache = new ConcurrentMapCache("authTokenCache");
     }
 
-    private Cache restApiAuthTokenCache;
+    private Cache authTokenCache;
 
     public String generateNewToken() {
         return UUID.randomUUID().toString();
     }
 
     public void store(String token, Authentication authentication) {
-        restApiAuthTokenCache.put(token, authentication);
+        authTokenCache.put(token, authentication);
     }
 
     public void clear(String token) {
-        restApiAuthTokenCache.evict(token);
+        authTokenCache.evict(token);
     }
 
     public boolean contains(String token) {
-        return restApiAuthTokenCache.get(token) != null;
+        return authTokenCache.get(token) != null;
     }
 
     public Authentication retrieve(String token) {
-        return (Authentication) restApiAuthTokenCache.get(token).get();
+        return (Authentication) authTokenCache.get(token).get();
     }
 }
